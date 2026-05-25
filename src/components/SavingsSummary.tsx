@@ -6,27 +6,34 @@ import type { Summary } from '@/lib/api'
 type Period = 'daily' | 'weekly' | 'monthly'
 
 const labels: Record<Period, string> = {
-  daily: 'per day',
-  weekly: 'per week',
-  monthly: 'per month',
+  daily: 'в день',
+  weekly: 'в неделю',
+  monthly: 'в месяц',
 }
 
 export default function SavingsSummary({ summary }: { summary: Summary }) {
   const [period, setPeriod] = useState<Period>('monthly')
 
   return (
-    <div className="rounded-2xl bg-indigo-600 p-6 text-white">
-      <p className="mb-1 text-sm font-medium text-indigo-200">You need to save</p>
-      <p className="mb-4 text-4xl font-bold">
-        ${summary[period].toLocaleString('en-US', { minimumFractionDigits: 2 })}
+    <div className="py-4">
+      <p className="mb-1 text-sm text-gray-400 tracking-wide uppercase" style={{ fontSize: '11px', letterSpacing: '0.08em' }}>
+        Нужно откладывать
       </p>
-      <div className="flex gap-2">
+      <p
+        className="mb-4 font-bold leading-none tracking-tight text-gray-900"
+        style={{ fontSize: 'clamp(3rem, 10vw, 5.5rem)' }}
+      >
+        €{summary[period].toLocaleString('ru-RU', { minimumFractionDigits: 2 })}
+      </p>
+      <div className="flex gap-1">
         {(['daily', 'weekly', 'monthly'] as Period[]).map((p) => (
           <button
             key={p}
             onClick={() => setPeriod(p)}
-            className={`rounded-full px-3 py-1 text-xs font-medium transition ${
-              period === p ? 'bg-white text-indigo-600' : 'bg-indigo-500 text-white hover:bg-indigo-400'
+            className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+              period === p
+                ? 'bg-gray-900 text-white'
+                : 'text-gray-400 hover:text-gray-700'
             }`}
           >
             {labels[p]}

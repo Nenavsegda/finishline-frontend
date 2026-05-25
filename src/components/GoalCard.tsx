@@ -21,45 +21,61 @@ export default function GoalCard({ goal, onToggle, onDelete, onEdit }: Props) {
   const isActive = goal.is_active === 1
 
   return (
-    <div className={`rounded-2xl border bg-white p-5 shadow-sm transition ${!isActive ? 'opacity-50' : ''}`}>
-      <div className="mb-3 flex items-start justify-between gap-2">
-        <div>
-          <h3 className="font-semibold">{goal.title}</h3>
-          <p className="mt-0.5 text-sm text-gray-500">
-            {new Date(goal.target_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+    <div
+      className={`rounded-2xl border border-cream-border bg-white p-5 shadow-sm transition-all duration-200 ${
+        !isActive ? 'opacity-40' : 'hover:shadow-md hover:border-gray-300'
+      }`}
+    >
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h3 className="truncate font-semibold text-gray-900">{goal.title}</h3>
+          <p className="mt-0.5 text-sm text-gray-400">
+            {new Date(goal.target_date).toLocaleDateString('ru-RU', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}
             {' · '}
-            {days > 0 ? `${days} days left` : 'Deadline passed'}
+            {days > 0 ? `осталось ${days} ${pluralDays(days)}` : 'срок истёк'}
           </p>
         </div>
-        <span className="text-lg font-bold text-indigo-600">
-          ${Number(goal.target_amount).toLocaleString('en-US')}
+        <span className="shrink-0 text-lg font-bold text-gray-900">
+          €{Number(goal.target_amount).toLocaleString('ru-RU')}
         </span>
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         <button
           onClick={() => onToggle(goal.id)}
-          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
+          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
             isActive
               ? 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100'
+              : 'bg-gray-900 text-white hover:bg-gray-700'
           }`}
         >
-          {isActive ? 'Deactivate' : 'Activate'}
+          {isActive ? 'Пауза' : 'Активировать'}
         </button>
         <button
           onClick={() => onEdit(goal)}
-          className="rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:bg-gray-200"
+          className="rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
-          Edit
+          Изменить
         </button>
         <button
           onClick={() => onDelete(goal.id)}
-          className="rounded-lg bg-red-50 px-3 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-100"
+          className="rounded-lg bg-red-50 px-3 py-1.5 text-xs font-medium text-red-500 transition-colors hover:bg-red-100"
         >
-          Delete
+          Удалить
         </button>
       </div>
     </div>
   )
+}
+
+function pluralDays(n: number): string {
+  const mod10 = n % 10
+  const mod100 = n % 100
+  if (mod10 === 1 && mod100 !== 11) return 'день'
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return 'дня'
+  return 'дней'
 }

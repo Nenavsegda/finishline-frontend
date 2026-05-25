@@ -12,7 +12,7 @@ export default function AuthCallback() {
 
   return (
     <main className="flex min-h-screen items-center justify-center">
-      <p className="text-gray-500">Signing you in...</p>
+      <p className="text-gray-500">Выполняется вход...</p>
     </main>
   )
 }
