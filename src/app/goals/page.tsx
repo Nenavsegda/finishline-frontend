@@ -8,29 +8,32 @@ import GoalForm from '@/components/GoalForm'
 import SavingsSummary from '@/components/SavingsSummary'
 import Timeline from '@/components/Timeline'
 
+type Period = 'daily' | 'weekly' | 'monthly'
+
 export default function GoalsPage() {
   const router = useRouter()
   const [goals, setGoals] = useState<Goal[]>([])
   const [summary, setSummary] = useState<Summary | null>(null)
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [initialLoading, setInitialLoading] = useState(true)
   const [quickTitle, setQuickTitle] = useState('')
   const [showForm, setShowForm] = useState(false)
+  const [period, setPeriod] = useState<Period>('monthly')
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     api.me().catch(() => router.replace('/'))
-    loadData()
+    loadData(true)
   }, [])
 
-  async function loadData() {
-    setLoading(true)
+  async function loadData(initial = false) {
+    if (initial) setInitialLoading(true)
     try {
       const [g, s] = await Promise.all([api.getGoals(), api.getSummary()])
       setGoals(g)
       setSummary(s)
     } finally {
-      setLoading(false)
+      if (initial) setInitialLoading(false)
     }
   }
 
@@ -85,6 +88,7 @@ export default function GoalsPage() {
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: '#F5F4EF' }}>
 
       {/* ── Header ── */}
+
       <header className="flex items-center justify-between px-6 py-4 sm:px-10">
         <div className="flex items-center gap-2">
           {/* Checkered finish flag */}
@@ -109,7 +113,7 @@ export default function GoalsPage() {
       <main className="flex flex-1 flex-col items-center px-4 pb-16 sm:px-6">
         <div className="w-full max-w-2xl">
 
-          {loading ? (
+          {initialLoading ? (
             <div className="flex justify-center pt-32">
               <div className="h-5 w-5 animate-spin rounded-full border-2 border-gray-200 border-t-gray-500" />
             </div>
@@ -188,7 +192,7 @@ export default function GoalsPage() {
               {/* ── Summary ── */}
               {summary && activeGoals.length > 0 && (
                 <div className="mt-6">
-                  <SavingsSummary summary={summary} />
+                  <SavingsSummary summary={summary} period={period} onPeriodChange={setPeriod} />
                 </div>
               )}
 

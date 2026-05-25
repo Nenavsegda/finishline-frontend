@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import type { Summary } from '@/lib/api'
 
 type Period = 'daily' | 'weekly' | 'monthly'
@@ -11,8 +10,13 @@ const labels: Record<Period, string> = {
   monthly: 'в месяц',
 }
 
-export default function SavingsSummary({ summary }: { summary: Summary }) {
-  const [period, setPeriod] = useState<Period>('monthly')
+interface Props {
+  summary: Summary
+  period: Period
+  onPeriodChange: (p: Period) => void
+}
+
+export default function SavingsSummary({ summary, period, onPeriodChange }: Props) {
 
   return (
     <div className="py-4">
@@ -29,7 +33,7 @@ export default function SavingsSummary({ summary }: { summary: Summary }) {
         {(['daily', 'weekly', 'monthly'] as Period[]).map((p) => (
           <button
             key={p}
-            onClick={() => setPeriod(p)}
+            onClick={() => onPeriodChange(p)}
             className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
               period === p
                 ? 'bg-gray-900 text-white'

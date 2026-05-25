@@ -6,18 +6,71 @@ interface Props {
   goals: Goal[]
 }
 
-// Mini checkered flag placed ON the timeline line
+// Two crossed checkered racing flags centered on the timeline point
 function MilestoneFlag({ cx, lineY }: { cx: number; lineY: number }) {
-  const sz = 14
-  const h = sz / 2
+  const id1 = `cf1-${cx}`
+  const id2 = `cf2-${cx}`
+
+  // Flag body: wavy path (pole at origin, flag waves to the right/up)
+  // Pole goes from (0,0) down to (0,14). Flag top-left at (0,0), waves rightward.
+  // We'll draw each flag as a group and rotate to cross them.
+
+  // Checkerboard via clipPath on the wavy flag shape
+  // Flag shape: a curved/wavy parallelogram ~18×10 units
+  // Pole: vertical line 14 units tall
+
   return (
-    <g>
-      <rect x={cx - h} y={lineY - h} width={h} height={h} fill="#1a1a1a" />
-      <rect x={cx}     y={lineY - h} width={h} height={h} fill="#ffffff" />
-      <rect x={cx - h} y={lineY}     width={h} height={h} fill="#ffffff" />
-      <rect x={cx}     y={lineY}     width={h} height={h} fill="#1a1a1a" />
-      {/* outline keeps white cells visible */}
-      <rect x={cx - h} y={lineY - h} width={sz} height={sz} fill="none" stroke="#1a1a1a" strokeWidth="0.8" />
+    <g transform={`translate(${cx},${lineY})`}>
+      <defs>
+        {/* Wavy flag outline path — pole at (0,0), flag extends right and up */}
+        <clipPath id={id1}>
+          <path d="M0,0 C4,-8 10,-10 16,-8 C12,-4 8,-2 14,2 C10,4 4,2 0,0 Z" />
+        </clipPath>
+        <clipPath id={id2}>
+          <path d="M0,0 C4,-8 10,-10 16,-8 C12,-4 8,-2 14,2 C10,4 4,2 0,0 Z" />
+        </clipPath>
+      </defs>
+
+      {/* Flag 1 — rotated -25deg, shifted left */}
+      <g transform="rotate(-25) translate(-8,-6)">
+        {/* Pole */}
+        <line x1="0" y1="0" x2="0" y2="14" stroke="#1a1a1a" strokeWidth="1.2" strokeLinecap="round"/>
+        {/* Flag background white */}
+        <path d="M0,0 C4,-8 10,-10 16,-8 C12,-4 8,-2 14,2 C10,4 4,2 0,0 Z" fill="#ffffff" stroke="#1a1a1a" strokeWidth="0.8"/>
+        {/* Checker cells clipped to flag shape */}
+        <g clipPath={`url(#${id1})`}>
+          {[0,1,2,3].map(col => [0,1].map(row => (
+            <rect
+              key={`${col}-${row}`}
+              x={col * 4} y={-8 + row * 4}
+              width={4} height={4}
+              fill={(col + row) % 2 === 0 ? '#1a1a1a' : 'none'}
+            />
+          )))}
+        </g>
+      </g>
+
+      {/* Flag 2 — mirrored, rotated +25deg, shifted right */}
+      <g transform="scale(-1,1) rotate(-25) translate(-8,-6)">
+        {/* Pole */}
+        <line x1="0" y1="0" x2="0" y2="14" stroke="#1a1a1a" strokeWidth="1.2" strokeLinecap="round"/>
+        {/* Flag background white */}
+        <path d="M0,0 C4,-8 10,-10 16,-8 C12,-4 8,-2 14,2 C10,4 4,2 0,0 Z" fill="#ffffff" stroke="#1a1a1a" strokeWidth="0.8"/>
+        {/* Checker cells */}
+        <g clipPath={`url(#${id2})`}>
+          {[0,1,2,3].map(col => [0,1].map(row => (
+            <rect
+              key={`${col}-${row}`}
+              x={col * 4} y={-8 + row * 4}
+              width={4} height={4}
+              fill={(col + row) % 2 === 0 ? '#1a1a1a' : 'none'}
+            />
+          )))}
+        </g>
+      </g>
+
+      {/* Center dot on timeline */}
+      <circle cx={0} cy={0} r="2.5" fill="#1a1a1a" />
     </g>
   )
 }
@@ -41,7 +94,7 @@ export default function Timeline({ goals }: Props) {
   const PAD_R = 55
   const TRACK = W - PAD_L - PAD_R
   const LINE_Y = 100          // horizontal line y
-  const FLAG_HALF = 7         // half of flag size (14/2)
+  const FLAG_HALF = 14        // flags extend ~14px above/below line center
   const SVG_H = 200
 
   // Label positions (alternating above / below)
