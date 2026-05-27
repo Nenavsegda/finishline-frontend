@@ -7,6 +7,7 @@ export interface Goal {
   target_amount: number
   target_date: string
   is_active: number
+  is_completed: number
   created_at: string
   updated_at: string
 }
@@ -37,7 +38,8 @@ export const api = {
     req<Goal>('/goals', { method: 'POST', body: JSON.stringify(body) }),
   updateGoal: (id: string, body: Partial<{ title: string; target_amount: number; target_date: string }>) =>
     req<Goal>(`/goals/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
-  toggleGoal: (id: string) => req<Goal>(`/goals/${id}/toggle`, { method: 'PATCH' }),
-  deleteGoal: (id: string) => req<void>(`/goals/${id}`, { method: 'DELETE' }),
+  toggleGoal:    (id: string) => req<Goal>(`/goals/${id}/toggle`,   { method: 'PATCH' }),
+  completeGoal:  (id: string) => req<Goal>(`/goals/${id}/complete`, { method: 'PATCH' }),
+  deleteGoal:    (id: string) => req<void>(`/goals/${id}`,          { method: 'DELETE' }),
   getSummary: () => req<Summary>('/goals/summary'),
 }

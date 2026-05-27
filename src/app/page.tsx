@@ -2,6 +2,7 @@
 
 import { useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
+import FinishFlagIcon from '@/components/FinishFlagIcon'
 
 const API = process.env.NEXT_PUBLIC_API_URL
 
@@ -12,25 +13,17 @@ function LoginContent() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-4" style={{ backgroundColor: '#F5F4EF' }}>
       <div className="w-full max-w-sm">
-        {/* Finish flag logo */}
-        <div className="mb-5 flex justify-center">
-          <svg width="56" height="44" viewBox="0 0 28 22" fill="none">
-            <line x1="3" y1="2" x2="3" y2="20" stroke="#1a1a1a" strokeWidth="1.5" strokeLinecap="round"/>
-            {[0,1,2].map(row => [0,1,2,3].map(col => (
-              <rect key={`${row}-${col}`} x={3+col*6} y={2+row*3} width={6} height={3} fill={(row+col)%2===0?'#1a1a1a':'#ffffff'}/>
-            )))}
-            <rect x="3" y="2" width="24" height="9" fill="none" stroke="#1a1a1a" strokeWidth="0.6"/>
-          </svg>
-        </div>
-
-        {/* Title */}
-        <div className="mb-10 text-center">
-          <h1
-            className="mb-2 text-3xl font-semibold text-gray-900"
-            style={{ fontFamily: "var(--font-lora), Georgia, serif" }}
-          >
-            FinishLine
-          </h1>
+        {/* Logo + Title */}
+        <div className="mb-10">
+          <div className="mb-3 flex items-center gap-4">
+            <FinishFlagIcon size={52} />
+            <h1
+              className="text-3xl font-semibold text-gray-900"
+              style={{ fontFamily: "var(--font-lora), Georgia, serif" }}
+            >
+              FinishLine
+            </h1>
+          </div>
           <p className="text-[15px] leading-relaxed text-gray-500">
             Откладывайте на мечту — каждый день
           </p>

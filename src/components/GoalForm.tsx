@@ -90,6 +90,7 @@ export default function GoalForm({ initial, isEditing = false, onSubmit, onCance
           value={date}
           onChange={(e) => setDate(e.target.value)}
           min={new Date().toISOString().slice(0, 10)}
+          max={(() => { const d = new Date(); d.setFullYear(d.getFullYear() + 5); return d.toISOString().slice(0, 10) })()}
           className={inputClass}
         />
       </div>

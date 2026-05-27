@@ -4,9 +4,10 @@ import type { Goal } from '@/lib/api'
 
 interface Props {
   goal: Goal
-  onToggle: (id: string) => void
-  onDelete: (id: string) => void
-  onEdit: (goal: Goal) => void
+  onToggle:   (id: string) => void
+  onComplete: (id: string) => void
+  onDelete:   (id: string) => void
+  onEdit:     (goal: Goal) => void
 }
 
 function daysLeft(targetDate: string): number {
@@ -16,7 +17,7 @@ function daysLeft(targetDate: string): number {
   return Math.max(0, Math.ceil((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)))
 }
 
-export default function GoalCard({ goal, onToggle, onDelete, onEdit }: Props) {
+export default function GoalCard({ goal, onToggle, onComplete, onDelete, onEdit }: Props) {
   const days = daysLeft(goal.target_date)
   const isActive = goal.is_active === 1
 
@@ -31,9 +32,7 @@ export default function GoalCard({ goal, onToggle, onDelete, onEdit }: Props) {
           <h3 className="truncate font-semibold text-gray-900">{goal.title}</h3>
           <p className="mt-0.5 text-sm text-gray-400">
             {new Date(goal.target_date).toLocaleDateString('ru-RU', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
+              year: 'numeric', month: 'long', day: 'numeric',
             })}
             {' · '}
             {days > 0 ? `осталось ${days} ${pluralDays(days)}` : 'срок истёк'}
@@ -54,6 +53,12 @@ export default function GoalCard({ goal, onToggle, onDelete, onEdit }: Props) {
           }`}
         >
           {isActive ? 'Пауза' : 'Активировать'}
+        </button>
+        <button
+          onClick={() => onComplete(goal.id)}
+          className="rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-200"
+        >
+          Выполнена
         </button>
         <button
           onClick={() => onEdit(goal)}
