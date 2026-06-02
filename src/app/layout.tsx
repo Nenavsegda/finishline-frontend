@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
-import { Lora } from 'next/font/google'
+import localFont from 'next/font/local'
 import './globals.css'
 
-const lora = Lora({
-  subsets: ['latin', 'cyrillic'],
-  weight: ['400', '500', '600'],
+const lora = localFont({
+  src: [
+    { path: '../../public/fonts/lora-latin.woff2',    weight: '400 600', style: 'normal' },
+    { path: '../../public/fonts/lora-cyrillic.woff2', weight: '400 600', style: 'normal' },
+  ],
   variable: '--font-lora',
   display: 'swap',
 })
