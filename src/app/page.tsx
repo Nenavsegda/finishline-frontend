@@ -4,8 +4,6 @@ import { useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
 import FinishFlagIcon from '@/components/FinishFlagIcon'
 
-const API = process.env.NEXT_PUBLIC_API_URL
-
 function LoginContent() {
   const params = useSearchParams()
   const error = params.get('error')
@@ -40,7 +38,7 @@ function LoginContent() {
 
         {/* Google sign-in */}
         <a
-          href={`${API}/auth/google`}
+          href="/api/auth/google"
           className="flex w-full items-center justify-center gap-3 rounded-2xl border border-cream-border bg-white px-5 py-3.5 text-[15px] font-medium text-gray-700 shadow-sm transition-all duration-150 hover:shadow-md hover:bg-gray-50 active:scale-[0.98]"
         >
           <svg className="h-[18px] w-[18px] shrink-0" viewBox="0 0 24 24">
