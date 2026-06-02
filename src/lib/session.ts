@@ -22,7 +22,7 @@ export async function createSession(userId: string, email: string) {
     sameSite: 'lax',
     path: '/',
     maxAge: MAX_AGE,
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.NEXT_PUBLIC_APP_URL?.startsWith('https') ?? false,
   })
 }
 
