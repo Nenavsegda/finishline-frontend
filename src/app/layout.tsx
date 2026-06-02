@@ -13,7 +13,7 @@ const lora = localFont({
 
 export const metadata: Metadata = {
   title: 'FinishLine',
-  description: 'Откладывайте на мечту — каждый день',
+  description: 'Путь в тысячу миль начинается с первого шага',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

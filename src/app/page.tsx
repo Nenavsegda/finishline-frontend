@@ -23,7 +23,7 @@ function LoginContent() {
             </h1>
           </div>
           <p className="text-[15px] leading-relaxed text-gray-500">
-            Откладывайте на мечту — каждый день
+            Путь в тысячу миль начинается с первого шага
           </p>
         </div>
 
