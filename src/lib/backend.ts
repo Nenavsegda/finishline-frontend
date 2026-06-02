@@ -16,7 +16,7 @@ export async function backendFetch(
   const res = await fetch(`${BACKEND_URL}${path}`, {
     ...init,
     headers: {
-      'Content-Type': 'application/json',
+      ...(init.body ? { 'Content-Type': 'application/json' } : {}),
       'x-internal-token': INTERNAL_TOKEN,
       'x-user-id': session.userId,
       ...(init.headers as Record<string, string> | undefined),
