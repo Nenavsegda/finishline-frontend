@@ -123,7 +123,6 @@ export default function GoalsPage() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm('Удалить эту цель?')) return
     await api.deleteGoal(id)
     loadData()
   }

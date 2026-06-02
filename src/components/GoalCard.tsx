@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import type { Goal } from '@/lib/api'
 
 interface Props {
@@ -20,6 +21,7 @@ function daysLeft(targetDate: string): number {
 export default function GoalCard({ goal, onToggle, onComplete, onDelete, onEdit }: Props) {
   const days = daysLeft(goal.target_date)
   const isActive = goal.is_active === 1
+  const [confirming, setConfirming] = useState(false)
 
   return (
     <div
@@ -44,34 +46,54 @@ export default function GoalCard({ goal, onToggle, onComplete, onDelete, onEdit 
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <button
-          onClick={() => onToggle(goal.id)}
-          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
-            isActive
-              ? 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              : 'bg-gray-900 text-white hover:bg-gray-700'
-          }`}
-        >
-          {isActive ? 'Пауза' : 'Активировать'}
-        </button>
-        <button
-          onClick={() => onComplete(goal.id)}
-          className="rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-200"
-        >
-          Выполнена
-        </button>
-        <button
-          onClick={() => onEdit(goal)}
-          className="rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-200"
-        >
-          Изменить
-        </button>
-        <button
-          onClick={() => onDelete(goal.id)}
-          className="rounded-lg bg-red-50 px-3 py-1.5 text-xs font-medium text-red-500 transition-colors hover:bg-red-100"
-        >
-          Удалить
-        </button>
+        {confirming ? (
+          <>
+            <span className="flex items-center text-xs text-gray-500 mr-1">Удалить цель?</span>
+            <button
+              onClick={() => { onDelete(goal.id); setConfirming(false) }}
+              className="rounded-lg bg-red-500 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-red-600"
+            >
+              Да, удалить
+            </button>
+            <button
+              onClick={() => setConfirming(false)}
+              className="rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-200"
+            >
+              Отмена
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={() => onToggle(goal.id)}
+              className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+                isActive
+                  ? 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'bg-gray-900 text-white hover:bg-gray-700'
+              }`}
+            >
+              {isActive ? 'Пауза' : 'Активировать'}
+            </button>
+            <button
+              onClick={() => onComplete(goal.id)}
+              className="rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-200"
+            >
+              Выполнена
+            </button>
+            <button
+              onClick={() => onEdit(goal)}
+              className="rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-200"
+            >
+              Изменить
+            </button>
+            <button
+              onClick={() => setConfirming(true)}
+              className="rounded-lg bg-red-50 px-3 py-1.5 text-xs font-medium text-red-500 transition-colors hover:bg-red-100"
+            >
+              Удалить
+            </button>
+          </>
+        )}
       </div>
     </div>
   )
