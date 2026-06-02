@@ -399,6 +399,7 @@ export default function GoalsPage() {
 // ── Past goal item ────────────────────────────────────────
 function PastGoalItem({ goal, onDelete }: { goal: Goal; onDelete: (id: string) => void }) {
   const completed = goal.is_completed === 1
+  const [confirming, setConfirming] = useState(false)
 
   return (
     <div className="flex items-center gap-3 rounded-2xl border border-[#E5E2DA] bg-white px-4 py-3">
@@ -420,15 +421,32 @@ function PastGoalItem({ goal, onDelete }: { goal: Goal; onDelete: (id: string) =
       </div>
 
       {/* Delete */}
-      <button
-        onClick={() => onDelete(goal.id)}
-        className="shrink-0 rounded-lg p-1.5 text-gray-300 transition hover:bg-red-50 hover:text-red-400"
-        title="Удалить"
-      >
-        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
+      {confirming ? (
+        <div className="flex shrink-0 items-center gap-1.5">
+          <button
+            onClick={() => { onDelete(goal.id); setConfirming(false) }}
+            className="rounded-lg bg-red-500 px-2 py-1 text-xs font-medium text-white transition hover:bg-red-600"
+          >
+            Удалить
+          </button>
+          <button
+            onClick={() => setConfirming(false)}
+            className="rounded-lg bg-gray-100 px-2 py-1 text-xs font-medium text-gray-500 transition hover:bg-gray-200"
+          >
+            Отмена
+          </button>
+        </div>
+      ) : (
+        <button
+          onClick={() => setConfirming(true)}
+          className="shrink-0 rounded-lg p-1.5 text-gray-300 transition hover:bg-red-50 hover:text-red-400"
+          title="Удалить"
+        >
+          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      )}
     </div>
   )
 }
